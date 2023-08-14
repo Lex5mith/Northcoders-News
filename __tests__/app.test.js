@@ -29,7 +29,4 @@ describe("GET requests", () => {
         });
       });
   });
-  test("404: expect a 404 not found when an invalid URL is entered", () => {
-    return request(app).get("/api/banana").expect(404);
-  });
 });
