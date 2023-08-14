@@ -29,4 +29,13 @@ describe("GET requests", () => {
         });
       });
   });
+  test.only("200: responds with the correct article object on the response body", () => {
+    return request(app)
+      .get("/api/articles/13")
+      .expect(200)
+      .then((response) => {
+        const { article } = response.body;
+        expect(article).toBe(article);
+      });
+  });
 });
