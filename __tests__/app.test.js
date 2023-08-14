@@ -3,6 +3,7 @@ const data = require("../db/data/test-data/index");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
 const app = require("../app");
+const endpointDocumentation = require("../endpoints.json");
 
 afterAll(() => {
   return db.end();
@@ -34,10 +35,7 @@ describe("GET requests", () => {
       .get("/api")
       .expect(200)
       .then((response) => {
-        // I think this should work but can't work out why it doesnt, please point me to the right notes to fix it.  
-        //for (const key in response.body) {
-        //   expect(key).toHaveProperty(['description']);
-        // }
+        expect(response.body).toEqual(endpointDocumentation);
         expect(response.body["GET /api"].description).toEqual(
           "serves up a json representation of all the available endpoints of the api"
         );
