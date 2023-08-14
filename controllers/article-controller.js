@@ -1,12 +1,29 @@
-const { fetchArticleById } = require("../models/article-model")
+const { fetchArticleById } = require("../models/article-model");
 
-const getArticleId = (request, response, next) => {
-    const article_id = request.params.article_id
-    fetchArticleById(article_id).then((article) => {
-        console.log(article, "<<<<article returned to controller")
-        return response.status(200).send({article})
+const getArticleById = (request, response, next) => {
+  const { article_id } = request.params;
+
+  if (/[A-Za-z]/g.test(article_id)) {
+    return response
+      .status(400)
+      .send({ msg: "Invalid id, article Id must be a number" });
+  }
+
+  fetchArticleById(article_id)
+    .then((article) => {
+      if (article) {
+        return response.status(200).send({ article });
+      }
+      if (!article) {
+        return Promise.reject({
+          status: 404,
+          msg: `Article ${article_id} does not exist`,
+        });
+      }
     })
-}
+    .catch((error) => {
+      next(error);
+    });
+};
 
-
-module.exports = { getArticleId }
+module.exports = { getArticleById };
