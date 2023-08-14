@@ -3,6 +3,7 @@ const data = require("../db/data/test-data/index");
 const seed = require("../db/seeds/seed");
 const request = require("supertest");
 const app = require("../app");
+const endpointDocumentation = require("../endpoints.json");
 
 afterAll(() => {
   return db.end();
@@ -36,6 +37,24 @@ describe("GET requests", () => {
       .then((response) => {
         const { article } = response.body;
         expect(article).toBe(article);
+      })
+    })
+    
+  test("200: returns api documentaion", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toEqual(endpointDocumentation);
+        expect(response.body["GET /api"].description).toEqual(
+          "serves up a json representation of all the available endpoints of the api"
+        );
+        expect(response.body["GET /api/topics"].description).toEqual(
+          "serves an array of all topics"
+        );
+        expect(response.body["GET /api/articles"].description).toEqual(
+          "serves an array of all articles"
+        );
       });
   });
 });
