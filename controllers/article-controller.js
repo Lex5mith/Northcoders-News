@@ -1,3 +1,5 @@
+const { request, response } = require("express");
+const { allArticlesWithCommentCount } = require("../models/article-model");
 const { fetchArticleById } = require("../models/article-model");
 
 const getArticleById = (request, response, next) => {
@@ -14,4 +16,15 @@ const getArticleById = (request, response, next) => {
     });
 };
 
-module.exports = { getArticleById };
+const getAllArticles = (request, response, next) => {
+  allArticlesWithCommentCount()
+    .then((articles) => {
+      // console.log("controller", articles);
+      return response.status(200).send({ articles });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+module.exports = { getArticleById, getAllArticles };
