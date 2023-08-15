@@ -16,6 +16,8 @@ app.get("/api", getApiDocumentation);
 
 app.get("/api/articles", getAllArticles);
 
+app.post("/api/articles/:article_id/comments", postCommentToArticle)
+
 app.use((request, response) => {
   response.status(404).send({ msg: "Not found" });
 });

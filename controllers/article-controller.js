@@ -26,4 +26,6 @@ const getAllArticles = (request, response, next) => {
     });
 };
 
-module.exports = { getArticleById, getAllArticles };
+const postCommentToArticle = (request, response, next) => {}
+
+module.exports = { getArticleById, getAllArticles, postCommentToArticle };
