@@ -41,12 +41,12 @@ exports.allCommentsForArticle = (article_id) => {
   return db.query(query, [article_id]).then((result) => {
     const comments = result.rows;
 
-    if (!comments.length) {
-      return Promise.reject({
-        status: 404,
-        msg: `Article ${article_id} does not exist`,
-      });
-    }
+    // if (!comments.length) {
+    //   return Promise.reject({
+    //     status: 404,
+    //     msg: `Article ${article_id} does not exist`,
+    //   });
+    // }
     return comments;
   });
 };

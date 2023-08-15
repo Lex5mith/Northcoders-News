@@ -30,11 +30,7 @@ const getAllArticles = (request, response, next) => {
 
 const getAllCommentsByArticleId = (request, response, next) => {
   const { article_id } = request.params;
-  const promises = [allCommentsForArticle(article_id)];
-
-  if (article_id) {
-    promises.push(checkArticleExists(article_id));
-  }
+  const promises = [allCommentsForArticle(article_id),checkArticleExists(article_id)];
 
   Promise.all(promises)
     .then((resolvedPromises) => {
