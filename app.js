@@ -24,7 +24,6 @@ app.use((request, response) => {
 });
 
 app.use((error, request, response, next) => {
-  console.log("error handler", error);
   // handle caught psql errors
   if (error.code === "23502" || error.code === "22P02") {
     return response
