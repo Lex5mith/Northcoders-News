@@ -127,4 +127,51 @@ describe("app.js tests", () => {
         });
     });
   });
+  describe("GET getAllCommentsByArticleId", () => {
+    test("200: responds with an array of comments for the given article_id with the correct properties", () => {
+      return request(app)
+        .get("/api/articles/6/comments")
+        .expect(200)
+        .then((response) => {
+          const { comments } = response.body;
+          expect(comments).toEqual([
+            {
+              comment_id: 16,
+              body: "This is a bad article name",
+              article_id: 6,
+              author: "butter_bridge",
+              votes: 1,
+              created_at: "2020-10-11T15:23:00.000Z",
+            },
+          ]);
+        });
+    });
+
+    test("200: responds with empty comment array if article exists, but has no comments", () => {
+      return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.comments).toEqual([]);
+        });
+    });
+
+    test("404: responds with error if article does not exist", () => {
+      return request(app)
+        .get("/api/articles/5000/comments")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Not found");
+        });
+    });
+
+    test("400: responds with error when given an invalid article id", () => {
+      return request(app)
+        .get("/api/articles/bananas/comments")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Invalid id, id must be a number");
+        });
+    });
+  });
 });

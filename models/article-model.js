@@ -29,7 +29,38 @@ exports.allArticlesWithCommentCount = () => {
   ORDER BY created_at DESC;
   `;
   return db.query(queryCommentCountSql).then(({ rows }) => {
-    
     return rows;
   });
+};
+
+exports.allCommentsForArticle = (article_id) => {
+  let query = `SELECT * 
+  FROM comments
+  WHERE article_id = $1
+  ORDER BY created_at DESC`;
+  return db.query(query, [article_id]).then((result) => {
+    const comments = result.rows;
+
+    // if (!comments.length) {
+    //   return Promise.reject({
+    //     status: 404,
+    //     msg: `Article ${article_id} does not exist`,
+    //   });
+    // }
+    return comments;
+  });
+};
+
+exports.checkArticleExists = (article_id) => {
+  return db
+    .query(
+      `SELECT * FROM articles
+    WHERE article_id = $1`,
+      [article_id]
+    )
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+    });
 };

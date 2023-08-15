@@ -1,6 +1,8 @@
 const { request, response } = require("express");
 const { allArticlesWithCommentCount } = require("../models/article-model");
 const { fetchArticleById } = require("../models/article-model");
+const { allCommentsForArticle } = require("../models/article-model");
+const { checkArticleExists } = require("../models/article-model");
 
 const getArticleById = (request, response, next) => {
   const { article_id } = request.params;
@@ -26,4 +28,18 @@ const getAllArticles = (request, response, next) => {
     });
 };
 
-module.exports = { getArticleById, getAllArticles };
+const getAllCommentsByArticleId = (request, response, next) => {
+  const { article_id } = request.params;
+  const promises = [allCommentsForArticle(article_id),checkArticleExists(article_id)];
+
+  Promise.all(promises)
+    .then((resolvedPromises) => {
+      const comments = resolvedPromises[0];
+      return response.status(200).send({ comments: comments });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+module.exports = { getArticleById, getAllArticles, getAllCommentsByArticleId };
