@@ -1,7 +1,10 @@
 const express = require("express");
 const { getTopics } = require("./controllers/topics-controller");
-const { getArticleById } = require("./controllers/article-controller");
 const { getApiDocumentation } = require("./controllers/api-controller");
+const {
+  getArticleById,
+  getAllArticles,
+} = require("./controllers/article-controller");
 
 const app = express();
 
@@ -11,11 +14,14 @@ app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api", getApiDocumentation);
 
-app.use((resquest, response) => {
+app.get("/api/articles", getAllArticles);
+
+app.use((request, response) => {
   response.status(404).send({ msg: "Not found" });
 });
 
 app.use((error, request, response, next) => {
+  console.log("error handler", error);
   // handle caught psql errors
   if (error.code === "23502" || error.code === "22P02") {
     return response
