@@ -77,28 +77,21 @@ describe("app.js tests", () => {
           });
         });
     });
-    test("200: for id: 13 responds with the correct article object on the response body", () => {
+    test("404: responds with error when given an unknown article id", () => {
       return request(app)
-        .get("/api/articles/13")
-        .expect(200)
+        .get("/api/articles/5000")
+        .expect(404)
         .then((response) => {
-          const { article } = response.body;
-
-          expect(article).toHaveProperty("article_id", expect.any(Number));
-          expect(article).toHaveProperty("title", expect.any(String));
-          expect(article).toHaveProperty("topic", expect.any(String));
-          expect(article).toHaveProperty("author", expect.any(String));
-          expect(article).toHaveProperty("body", expect.any(String));
-          expect(article).toHaveProperty("votes", expect.any(Number));
-          expect(article).toHaveProperty("article_img_url", expect.any(String));
-          expect(article).toHaveProperty("created_at", expect.any(String));
+          expect(response.body.msg).toEqual(`Article 5000 does not exist`);
         });
     });
-    test("404: responds with error when given an unknown article id", () => {
-      return request(app).get("/api/articles/5000").expect(404);
-    });
     test("400: responds with error when given an unknown article id", () => {
-      return request(app).get("/api/articles/bananas").expect(400);
+      return request(app)
+        .get("/api/articles/bananas")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Invalid id, id must be a number");
+        });
     });
   });
 });
