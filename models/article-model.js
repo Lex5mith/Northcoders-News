@@ -33,3 +33,21 @@ exports.allArticlesWithCommentCount = () => {
     return rows;
   });
 };
+
+exports.allCommentsByArticleId = (article_id) => {
+  let query = `SELECT * 
+  FROM comments
+  WHERE article_id = $1
+  ORDER BY created_at ASC`;
+  return db.query(query, [article_id]).then((result) => {
+    const comments = result.rows
+    
+    // if (!article.length) {
+    //   return Promise.reject({
+    //     status: 404,
+    //     msg: `Article ${article_id} does not exist`,
+    //   });
+    console.log(comments)
+    return comments
+  })
+}

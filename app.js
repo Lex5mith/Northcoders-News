@@ -4,6 +4,7 @@ const { getApiDocumentation } = require("./controllers/api-controller");
 const {
   getArticleById,
   getAllArticles,
+  getAllCommentsByArticleId
 } = require("./controllers/article-controller");
 
 const app = express();
@@ -15,6 +16,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api", getApiDocumentation);
 
 app.get("/api/articles", getAllArticles);
+
+app.get("/api/articles/:article_id/comments", getAllCommentsByArticleId)
 
 app.use((request, response) => {
   response.status(404).send({ msg: "Not found" });

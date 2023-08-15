@@ -129,3 +129,40 @@ describe("app.js tests", () => {
     });
   });
 });
+describe.only("GET getAllCommentsByArticleId", () => {
+  test("200: responds with an array of comments for the given article_id with the correct properties", () => {
+    return request(app)
+      .get("/api/articles/13/comments")
+      .expect(200)
+      // .then((response) => {
+      //   const { article } = response.body;
+      //   expect(article).toEqual({
+      //     article_id: 13,
+      //     title: "Another article about Mitch",
+      //     topic: "mitch",
+      //     author: "butter_bridge",
+      //     body: "There will never be enough articles about Mitch!",
+      //     created_at: "2020-10-11T11:24:00.000Z",
+      //     votes: 0,
+      //     article_img_url:
+      //       "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+      //   });
+      });
+  });
+  // test("404: responds with error when given an unknown article id", () => {
+  //   return request(app)
+  //     .get("/api/articles/5000")
+  //     .expect(404)
+  //     .then((response) => {
+  //       expect(response.body.msg).toEqual(`Article 5000 does not exist`);
+  //     });
+  // });
+  // test("400: responds with error when given an unknown article id", () => {
+  //   return request(app)
+  //     .get("/api/articles/bananas")
+  //     .expect(400)
+  //     .then((response) => {
+  //       expect(response.body.msg).toEqual("Invalid id, id must be a number");
+  //     });
+//   });
+// });
