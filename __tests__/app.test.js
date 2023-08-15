@@ -102,7 +102,6 @@ describe("app.js tests", () => {
         .expect(200)
         .then((response) => {
           const { articles } = response.body;
-          console.log("i am the response: ", response.body);
           articles.forEach((article) => {
             expect(article).toHaveProperty("author", expect.any(String));
             expect(article).toHaveProperty("title", expect.any(String));

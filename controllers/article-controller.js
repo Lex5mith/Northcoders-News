@@ -19,7 +19,6 @@ const getArticleById = (request, response, next) => {
 const getAllArticles = (request, response, next) => {
   allArticlesWithCommentCount()
     .then((articles) => {
-      // console.log("controller", articles);
       return response.status(200).send({ articles });
     })
     .catch((error) => {
