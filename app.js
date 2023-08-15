@@ -4,6 +4,7 @@ const { getApiDocumentation } = require("./controllers/api-controller");
 const {
   getArticleById,
   getAllArticles,
+  getAllCommentsByArticleId
 } = require("./controllers/article-controller");
 
 const app = express();
@@ -18,12 +19,13 @@ app.get("/api/articles", getAllArticles);
 
 app.post("/api/articles/:article_id/comments", postCommentToArticle)
 
+app.get("/api/articles/:article_id/comments", getAllCommentsByArticleId)
+
 app.use((request, response) => {
   response.status(404).send({ msg: "Not found" });
 });
 
 app.use((error, request, response, next) => {
-  console.log("error handler", error);
   // handle caught psql errors
   if (error.code === "23502" || error.code === "22P02") {
     return response
