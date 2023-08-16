@@ -41,7 +41,14 @@ describe("app.js tests", () => {
           ).toEqual("returns the comment that has been added to the article");
           expect(
             response.body["PATCH /api/articles/:article_id"].description
-          ).toEqual("updates the vote count in an article with a valid id, works for both positive and negative integers");
+          ).toEqual(
+            "updates the vote count in an article with a valid id, works for both positive and negative integers"
+          );
+          expect(
+            response.body["DELETE /api/comments/:comment_id"].description
+          ).toEqual(
+            "deletes the given comment by comment_id"
+          );
         });
     });
   });
@@ -251,15 +258,15 @@ describe("app.js tests", () => {
         })
         .expect(201)
         .then((response) => {
-        const {article } = response.body
+          const { article } = response.body;
           expect(article).toEqual({
-              comment_id: 16,
-              body: "This is a bad article name",
-              article_id: 6,
-              author: "butter_bridge",
-              votes: 4,
-              created_at: "2020-10-11T15:23:00.000Z",
-            });
+            comment_id: 16,
+            body: "This is a bad article name",
+            article_id: 6,
+            author: "butter_bridge",
+            votes: 4,
+            created_at: "2020-10-11T15:23:00.000Z",
+          });
         });
     });
     test("201: responds with the correctly incremented vote count when passed a positive integer", () => {
@@ -297,7 +304,7 @@ describe("app.js tests", () => {
     });
     test("400: responds with a 400 error and message if non number value entered to inc_votes", () => {
       return request(app)
-        .patch('/api/articles/6')
+        .patch("/api/articles/6")
         .send({
           inc_votes: "null",
         })
@@ -307,6 +314,31 @@ describe("app.js tests", () => {
         });
     });
   });
+  describe("DELETE: /api/comments/:comment_id", () => {
+    test("204: deleted the comment and responds with status 204 and no content", () => {
+      return request(app)
+        .delete(`/api/comments/6`)
+        .expect(204)
+        .then((response) => {
+          expect(response.body).toEqual({});
+        });
+    });
+    test("404: responds with a 404 error and message if comment_id does not exist", () => {
+      return request(app)
+        .delete("/api/comments/10000")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Not found");
+        });
+    });
+    test("400: responds with a 400 error and message if non number value entered to comment_id", () => {
+      return request(app)
+        .delete("/api/comments/bananas")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Invalid id");
+        });
+    });
+  });
 });
-//non number value to unc votes (400)
-//article id that doesnt exist (404)
+

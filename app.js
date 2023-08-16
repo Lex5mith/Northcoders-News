@@ -7,6 +7,7 @@ const {
   getAllArticles,
   getAllCommentsByArticleId,
   postCommentToArticle,
+  deleteCommentByCommentId, 
 } = require("./controllers/article-controller");
 
 const app = express();
@@ -26,6 +27,7 @@ app.get("/api/articles/:article_id/comments", getAllCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", postCommentToArticle);
 
+app.delete("/api/comments/:comment_id", deleteCommentByCommentId )
 
 
 
