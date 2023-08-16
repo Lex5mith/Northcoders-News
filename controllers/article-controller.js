@@ -70,8 +70,7 @@ const patchArticleById = (request, response, next) => {
 
   Promise.all(promises)
     .then((resolvedPromises) => {
-      const article = resolvedPromises;
-      console.log(article, "<<<<article in controller")
+      const article = resolvedPromises[1];
       return response.status(201).send({ article });
     })
     .catch((error) => {
@@ -79,13 +78,7 @@ const patchArticleById = (request, response, next) => {
     });
 };
 
-const deleteCommentById = (request, response, next) => {
-  const comment_id = request.params.comment_id
 
-  removeComment(comment_id).then((comment) => {
-    return response.status(204).send()
-  })
-}
 
 module.exports = {
   getArticleById,
@@ -93,5 +86,5 @@ module.exports = {
   getAllCommentsByArticleId,
   postCommentToArticle,
   patchArticleById,
-  deleteCommentById
+
 };

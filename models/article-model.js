@@ -83,5 +83,3 @@ exports.updateArticleById = (article_id, inc_votes) => {
       return rows[0]
     })
 }
-
-exports.removeComment = (comment_id)

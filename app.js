@@ -26,7 +26,7 @@ app.get("/api/articles/:article_id/comments", getAllCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", postCommentToArticle);
 
-app.delete("/api/comments/:comment_id", deleteCommentById )
+
 
 
 app.use((request, response) => {
@@ -35,7 +35,6 @@ app.use((request, response) => {
 
 app.use((error, request, response, next) => {
   // handle caught psql errors
-  console.log(error, "<<<<PSQL error")
   if (error.code === "23502" || error.code === "22P02") {
     return response
       .status(400)

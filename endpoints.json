@@ -67,5 +67,19 @@
       "votes": 0,
       "created_at": "2020-10-11T15:23:00.000Z"
     }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "updates the vote count in an article with a valid id, works for both positive and negative integers",
+    "exampleBody": {
+      "inc_votes": 3
+    },
+    "exampleResponse": {
+      "comment_id": 16,
+      "body": "This is a bad article name",
+      "article_id": 6,
+      "author": "butter_bridge",
+      "votes": 4,
+      "created_at": "2020-10-11T15:23:00.000Z"
+    }
   }
 }
