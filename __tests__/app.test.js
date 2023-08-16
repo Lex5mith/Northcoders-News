@@ -234,19 +234,73 @@ describe("app.js tests", () => {
     });
   });
   describe.only("PATCH: /api/articles/:article_id", () => {
-    test("200: reponds with the updated article", () => {
+    test("201: reponds with the updated article", () => {
       return request(app)
         .patch(`/api/articles/6`)
         .send({
-          inc_votes: 1,
+          inc_votes: 3,
         })
-        .expect(200)
-        // .then((response) => {
-        //   expect(response.body.ride.ride_id).toEqual(1);
-        //   expect(response.body.ride.ride_name).toEqual("very scary teacups");
-        //   expect(response.body.ride.year_opened).toEqual(2002);
-        //   expect(response.body.ride.votes).toEqual(5);
-        // });
+        .expect(201)
+        .then((response) => {
+        const {article } = response.body
+          expect(article).toEqual({
+            article: {
+              comment_id: 16,
+              body: "This is a bad article name",
+              article_id: 6,
+              author: "butter_bridge",
+              votes: 4,
+              created_at: "2020-10-11T15:23:00.000Z",
+            },
+          });
+        });
+    });
+    test("201: responds with the correctly incremented vote count when passed a positive integer", () => {
+      return request(app)
+        .patch(`/api/articles/6`)
+        .send({
+          inc_votes: 3,
+        })
+        .expect(201)
+        .then((response) => {
+          console.log(response.body, "201 response<<<<<")
+          expect(response.body.votes).toEqual(4);
+        });
+    });
+    test("201: responds with the correctly decremented vote count when passed a negative integer", () => {
+      return request(app)
+        .patch(`/api/articles/6`)
+        .send({
+          inc_votes: -3,
+        })
+        .expect(201)
+        .then((response) => {
+          expect(response.body.article.votes).toEqual(-2);
+        });
+    });
+    test("404: responds with a 404 error and message if article does not exist", () => {
+      return request(app)
+        .patch("/api/articles/10000")
+        .send({
+          inc_votes: -3,
+        })
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Not found");
+        });
+    });
+    test("400: responds with a 400 error and message if non number value entered to inc_votes", () => {
+      return request(app)
+        .patch('/api/articles/6')
+        .send({
+          inc_votes: "null",
+        })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Invalid id");
+        });
     });
   });
 });
+//non number value to unc votes (400)
+//article id that doesnt exist (404)

@@ -61,15 +61,31 @@ const postCommentToArticle = (request, response, next) => {
 };
 
 const patchArticleById = (request, response, next) => {
-  const {article_id} = request.params
-  console.log(article_id, "<<<<article id in controller");
-  const {inc_votes} = request.body
-  console.log(inc_votes, "<<<newvote in controller");
+  const { article_id } = request.params;
+  const { inc_votes } = request.body;
+  const promises = [
+    checkArticleExists(article_id),
+    updateArticleById(article_id, inc_votes),
+  ];
 
-  updateArticleById(article_id, inc_votes).then((article) => {
-    return response.status(200).send({ article });
-  });
+  Promise.all(promises)
+    .then((resolvedPromises) => {
+      const article = resolvedPromises;
+      console.log(article, "<<<<article in controller")
+      return response.status(201).send({ article });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
+
+const deleteCommentById = (request, response, next) => {
+  const comment_id = request.params.comment_id
+
+  removeComment(comment_id).then((comment) => {
+    return response.status(204).send()
+  })
+}
 
 module.exports = {
   getArticleById,
@@ -77,4 +93,5 @@ module.exports = {
   getAllCommentsByArticleId,
   postCommentToArticle,
   patchArticleById,
+  deleteCommentById
 };
