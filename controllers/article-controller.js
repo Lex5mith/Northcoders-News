@@ -1,5 +1,5 @@
 const { request, response } = require("express");
-const { allArticlesWithCommentCount } = require("../models/article-model");
+const { allArticlesWithCommentCount, addArticleComment } = require("../models/article-model");
 const { fetchArticleById } = require("../models/article-model");
 const { allCommentsForArticle } = require("../models/article-model");
 const { checkArticleExists } = require("../models/article-model");
@@ -30,7 +30,10 @@ const getAllArticles = (request, response, next) => {
 
 const getAllCommentsByArticleId = (request, response, next) => {
   const { article_id } = request.params;
-  const promises = [allCommentsForArticle(article_id),checkArticleExists(article_id)];
+  const promises = [
+    allCommentsForArticle(article_id),
+    checkArticleExists(article_id),
+  ];
 
   Promise.all(promises)
     .then((resolvedPromises) => {
@@ -39,7 +42,24 @@ const getAllCommentsByArticleId = (request, response, next) => {
     })
     .catch((error) => {
       next(error);
-    });
+    })
+    
 };
 
-module.exports = { getArticleById, getAllArticles, getAllCommentsByArticleId };
+const postCommentToArticle = (request, response, next) => {
+  const { article_id } = request.params
+  addArticleComment(article_id, request.body)
+  .then((comment) => {
+    return response.status(201).send({ comment })
+  })
+  .catch((error) => {
+    next(error);
+  });
+};
+
+module.exports = {
+  getArticleById,
+  getAllArticles,
+  getAllCommentsByArticleId,
+  postCommentToArticle,
+};

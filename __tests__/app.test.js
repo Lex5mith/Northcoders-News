@@ -90,7 +90,7 @@ describe("app.js tests", () => {
         .get("/api/articles/bananas")
         .expect(400)
         .then((response) => {
-          expect(response.body.msg).toEqual("Invalid id, id must be a number");
+          expect(response.body.msg).toEqual("Invalid id");
         });
     });
   });
@@ -170,7 +170,66 @@ describe("app.js tests", () => {
         .get("/api/articles/bananas/comments")
         .expect(400)
         .then((response) => {
-          expect(response.body.msg).toEqual("Invalid id, id must be a number");
+          expect(response.body.msg).toEqual("Invalid id");
+        });
+    });
+  });
+
+  describe("POST postCommentToArticle", () => {
+    test("201: responds with the comment data that has beed added", () => {
+      return request(app)
+        .post("/api/articles/6/comments")
+        .send({
+          username: "lurker",
+          body: "adding my first comment :-)",
+        })
+        .expect(201)
+        .then((response) => {
+          const { comment } = response.body;
+          expect(comment).toEqual({
+            comment_id: 19,
+            body: "adding my first comment :-)",
+            article_id: 6,
+            author: "lurker",
+            votes: 0,
+            created_at: expect.any(String),
+          });
+        });
+    });
+    test("404: responds with a 404 error and message if article does not exist", () => {
+      return request(app)
+        .post("/api/articles/5000/comments")
+        .send({
+          username: "lurker",
+          body: "adding my first comment :-)",
+        })
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Id is not in table");
+        });
+    });
+    test("404: responds with a 400 error and message if username does not exist", () => {
+      return request(app)
+        .post("/api/articles/6/comments")
+        .send({
+          username: "bob",
+          body: "adding my first comment :-)",
+        })
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Id is not in table");
+        });
+    });
+    test("400: responds with a 400 error and message if bad request body sent", () => {
+      return request(app)
+        .post("/api/articles/6/comments")
+        .send({
+          username: null,
+          body: "adding my first comment :-)",
+        })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Invalid id");
         });
     });
   });

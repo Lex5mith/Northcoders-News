@@ -40,13 +40,6 @@ exports.allCommentsForArticle = (article_id) => {
   ORDER BY created_at DESC`;
   return db.query(query, [article_id]).then((result) => {
     const comments = result.rows;
-
-    // if (!comments.length) {
-    //   return Promise.reject({
-    //     status: 404,
-    //     msg: `Article ${article_id} does not exist`,
-    //   });
-    // }
     return comments;
   });
 };
@@ -64,3 +57,15 @@ exports.checkArticleExists = (article_id) => {
       }
     });
 };
+
+exports.addArticleComment = (article_id, requestBody) => {
+  return db.query(
+  `INSERT INTO comments
+  (article_id, author, body)
+  VALUES
+  ($1, $2, $3)
+  RETURNING *;`,[article_id, requestBody.username, requestBody.body])
+  .then(({rows}) => {
+    return rows[0]
+  })
+}
