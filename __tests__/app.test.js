@@ -359,7 +359,19 @@ describe("app.js tests", () => {
         .then((response) => {
           const { users } = response.body;
           expect(users).toHaveLength(4);
+        });
+    });
+  });
+  describe("articles queries", () => {
+    test("200: articles can be queried by topic, if no topic is specified, all articles should be", () => {
+      return request(app)
+        .get("api/articles?topic=mitch")
+        .then(({ body }) => {
+          const { articles } = body.expect(articles).toHaveLength(12);
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
           });
         });
     });
   });
+});

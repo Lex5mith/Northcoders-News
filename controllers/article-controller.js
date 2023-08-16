@@ -25,7 +25,8 @@ const getArticleById = (request, response, next) => {
 };
 
 const getAllArticles = (request, response, next) => {
-  allArticlesWithCommentCount()
+  const {topic, sort_by, order} = request.query
+  allArticlesWithCommentCount(topic, sort_by, order)
     .then((articles) => {
       return response.status(200).send({ articles });
     })

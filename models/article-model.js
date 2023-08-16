@@ -19,16 +19,50 @@ exports.fetchArticleById = (article_id) => {
   });
 };
 
-exports.allArticlesWithCommentCount = () => {
+exports.allArticlesWithCommentCount = (
+  topic,
+  sort_by = "created_at",
+  order = "DESC"
+) => {
+  const allArticles = [
+    "title",
+    "topic",
+    "author",
+    "body",
+    "created_at",
+    "votes",
+    "article_image_url, comment_count",
+  ];
+  const queryValues = [];
+
   let queryCommentCountSql = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
   COUNT(comments.article_id) AS comment_count 
   FROM articles
   LEFT JOIN comments 
   ON articles.article_id = comments.article_id 
   GROUP BY articles.article_id
-  ORDER BY created_at DESC;
+  ORDER BY ${sort_by} ${order};
   `;
-  return db.query(queryCommentCountSql).then(({ rows }) => {
+
+  if (!allArticles.includes(topic)) {
+    return db.query(queryCommentCountSql).then(({ rows }) => {
+      return rows;
+    });
+  }
+
+  if (topic) {
+    queryCommentCountSql += `WHERE topic = $1`;
+    queryValues.push(topic);
+  }
+
+  // if (sort_by) {
+  //   queryCommentCountSql += `WHERE topic = $1`;
+  //   queryValues.push(sort_by);
+  // }
+
+  // queryCommentCountSql += `ORDER BY ${order}`;
+
+  return db.query(queryCommentCountSql, queryValues).then(({ rows }) => {
     return rows;
   });
 };
@@ -73,38 +107,44 @@ exports.checkCommentExists = (comment_id) => {
 };
 
 exports.addArticleComment = (article_id, requestBody) => {
-  return db.query(
-  `INSERT INTO comments
+  return db
+    .query(
+      `INSERT INTO comments
   (article_id, author, body)
   VALUES
   ($1, $2, $3)
-  RETURNING *;`,[article_id, requestBody.username, requestBody.body])
-  .then(({rows}) => {
-    return rows[0]
-  })
-}
+  RETURNING *;`,
+      [article_id, requestBody.username, requestBody.body]
+    )
+    .then(({ rows }) => {
+      return rows[0];
+    });
+};
 
 exports.updateArticleById = (article_id, inc_votes) => {
-  return db.query(
+  return db
+    .query(
       `
       UPDATE comments
       SET votes = votes + $2
       WHERE article_id = $1
-      RETURNING *;`, 
+      RETURNING *;`,
       [article_id, inc_votes]
     )
     .then(({ rows }) => {
-      return rows[0]
-    })
-}
+      return rows[0];
+    });
+};
 
 exports.removeComment = (comment_id) => {
-  return db.query(`
+  return db
+    .query(
+      `
   DELETE from comments WHERE comment_id = $1`,
-  [comment_id]
-  )
-  .then(({rows})=> {
-    console.log("rows after delete sql query", rows)
-    return rows
-  })
-}
+      [comment_id]
+    )
+    .then(({ rows }) => {
+      console.log("rows after delete sql query", rows);
+      return rows;
+    });
+};
