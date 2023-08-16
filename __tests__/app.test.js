@@ -233,4 +233,20 @@ describe("app.js tests", () => {
         });
     });
   });
+  describe.only("PATCH: /api/articles/:article_id", () => {
+    test("200: reponds with the updated article", () => {
+      return request(app)
+        .patch(`/api/articles/6`)
+        .send({
+          inc_votes: 1,
+        })
+        .expect(200)
+        // .then((response) => {
+        //   expect(response.body.ride.ride_id).toEqual(1);
+        //   expect(response.body.ride.ride_name).toEqual("very scary teacups");
+        //   expect(response.body.ride.year_opened).toEqual(2002);
+        //   expect(response.body.ride.votes).toEqual(5);
+        // });
+    });
+  });
 });

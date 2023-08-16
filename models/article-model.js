@@ -69,3 +69,18 @@ exports.addArticleComment = (article_id, requestBody) => {
     return rows[0]
   })
 }
+
+exports.updateArticleById = (article_id, inc_votes) => {
+  console.log(article_id, "<<<<article id in model")
+  console.log(inc_votes, "<<<<newVote in model")
+  return db.query(
+      `
+      UPDATE articles
+      SET votes = '${inc_votes}'
+      WHERE article_id = '${article_id}'
+      RETURNING *;`
+    )
+    .then(({ rows }) => {
+      return rows
+    })
+}
