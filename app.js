@@ -9,19 +9,20 @@ const {
   postCommentToArticle,
   deleteCommentByCommentId, 
 } = require("./controllers/article-controller");
+const {getAllUsers} = require("./controllers/user-controller")
 
 const app = express();
 app.use(express.json());
 
+app.get("/api", getApiDocumentation);
+
 app.get("/api/topics", getTopics);
+
+app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
 
 app.patch("/api/articles/:article_id", patchArticleById);
-
-app.get("/api", getApiDocumentation);
-
-app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id/comments", getAllCommentsByArticleId);
 
@@ -29,6 +30,7 @@ app.post("/api/articles/:article_id/comments", postCommentToArticle);
 
 app.delete("/api/comments/:comment_id", deleteCommentByCommentId )
 
+app.get("/api/users", getAllUsers);
 
 
 app.use((request, response) => {

@@ -46,9 +46,7 @@ describe("app.js tests", () => {
           );
           expect(
             response.body["DELETE /api/comments/:comment_id"].description
-          ).toEqual(
-            "deletes the given comment by comment_id"
-          );
+          ).toEqual("deletes the given comment by comment_id");
         });
     });
   });
@@ -340,5 +338,28 @@ describe("app.js tests", () => {
         });
     });
   });
-});
-
+  describe("GET getAllUsers", () => {
+    test("200: responds with an array of user objects", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+          const { users } = response.body;
+          users.forEach((user) => {
+            expect(user).toHaveProperty("username", expect.any(String));
+            expect(user).toHaveProperty("name", expect.any(String));
+            expect(user).toHaveProperty("avatar_url", expect.any(String));
+          });
+        });
+    });
+    test("200: all users are returned", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((response) => {
+          const { users } = response.body;
+          expect(users).toHaveLength(4);
+          });
+        });
+    });
+  });
