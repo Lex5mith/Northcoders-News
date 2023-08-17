@@ -6,6 +6,8 @@ const {
   allCommentsForArticle,
   checkArticleExists,
   updateArticleById,
+  removeComment,
+  checkCommentExists,
 } = require("../models/article-model");
 
 const getArticleById = (request, response, next) => {
@@ -78,6 +80,22 @@ const patchArticleById = (request, response, next) => {
     });
 };
 
+const deleteCommentByCommentId = (request, response, next) => {
+  const {comment_id} = request.params
+  const promises = [
+    checkCommentExists(comment_id),
+    removeComment(comment_id)
+  ]
+
+  Promise.all(promises)
+  .then((resolvedPromises) => {
+    return response.status(204).send()
+  })
+  .catch((error) => {
+    next(error);
+  });
+}
+
 
 
 module.exports = {
@@ -86,5 +104,5 @@ module.exports = {
   getAllCommentsByArticleId,
   postCommentToArticle,
   patchArticleById,
-
+  deleteCommentByCommentId, 
 };

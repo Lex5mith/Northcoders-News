@@ -81,5 +81,9 @@
       "votes": 4,
       "created_at": "2020-10-11T15:23:00.000Z"
     }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes the given comment by comment_id",
+    "exampleResponse": {}
   }
 }

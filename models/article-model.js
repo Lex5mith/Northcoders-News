@@ -58,6 +58,20 @@ exports.checkArticleExists = (article_id) => {
     });
 };
 
+exports.checkCommentExists = (comment_id) => {
+  return db
+    .query(
+      `SELECT * FROM comments
+    WHERE comment_id = $1`,
+      [comment_id]
+    )
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+    });
+};
+
 exports.addArticleComment = (article_id, requestBody) => {
   return db.query(
   `INSERT INTO comments
@@ -82,4 +96,15 @@ exports.updateArticleById = (article_id, inc_votes) => {
     .then(({ rows }) => {
       return rows[0]
     })
+}
+
+exports.removeComment = (comment_id) => {
+  return db.query(`
+  DELETE from comments WHERE comment_id = $1`,
+  [comment_id]
+  )
+  .then(({rows})=> {
+    console.log("rows after delete sql query", rows)
+    return rows
+  })
 }
