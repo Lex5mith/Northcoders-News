@@ -1,8 +1,12 @@
 const { request, response } = require("express");
-const { allArticlesWithCommentCount, addArticleComment } = require("../models/article-model");
-const { fetchArticleById } = require("../models/article-model");
-const { allCommentsForArticle } = require("../models/article-model");
-const { checkArticleExists } = require("../models/article-model");
+const {
+  allArticlesWithCommentCount,
+  addArticleComment,
+  fetchArticleById,
+  allCommentsForArticle,
+  checkArticleExists,
+  updateArticleById,
+} = require("../models/article-model");
 
 const getArticleById = (request, response, next) => {
   const { article_id } = request.params;
@@ -42,24 +46,45 @@ const getAllCommentsByArticleId = (request, response, next) => {
     })
     .catch((error) => {
       next(error);
-    })
-    
+    });
 };
 
 const postCommentToArticle = (request, response, next) => {
-  const { article_id } = request.params
+  const { article_id } = request.params;
   addArticleComment(article_id, request.body)
-  .then((comment) => {
-    return response.status(201).send({ comment })
-  })
-  .catch((error) => {
-    next(error);
-  });
+    .then((comment) => {
+      return response.status(201).send({ comment });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
+
+const patchArticleById = (request, response, next) => {
+  const { article_id } = request.params;
+  const { inc_votes } = request.body;
+  const promises = [
+    checkArticleExists(article_id),
+    updateArticleById(article_id, inc_votes),
+  ];
+
+  Promise.all(promises)
+    .then((resolvedPromises) => {
+      const article = resolvedPromises[1];
+      return response.status(201).send({ article });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+
 
 module.exports = {
   getArticleById,
   getAllArticles,
   getAllCommentsByArticleId,
   postCommentToArticle,
+  patchArticleById,
+
 };

@@ -33,6 +33,15 @@ describe("app.js tests", () => {
           expect(
             response.body["GET /api/articles/:article_id"].description
           ).toEqual("returns one article when given a valid id");
+          expect(
+            response.body["GET /api/articles/:article_id/comments"].description
+          ).toEqual("returns an array of comments when given a valid id");
+          expect(
+            response.body["POST /api/articles/:article_id/comments"].description
+          ).toEqual("returns the comment that has been added to the article");
+          expect(
+            response.body["PATCH /api/articles/:article_id"].description
+          ).toEqual("updates the vote count in an article with a valid id, works for both positive and negative integers");
         });
     });
   });
@@ -233,4 +242,71 @@ describe("app.js tests", () => {
         });
     });
   });
+  describe("PATCH: /api/articles/:article_id", () => {
+    test("201: reponds with the updated article", () => {
+      return request(app)
+        .patch(`/api/articles/6`)
+        .send({
+          inc_votes: 3,
+        })
+        .expect(201)
+        .then((response) => {
+        const {article } = response.body
+          expect(article).toEqual({
+              comment_id: 16,
+              body: "This is a bad article name",
+              article_id: 6,
+              author: "butter_bridge",
+              votes: 4,
+              created_at: "2020-10-11T15:23:00.000Z",
+            });
+        });
+    });
+    test("201: responds with the correctly incremented vote count when passed a positive integer", () => {
+      return request(app)
+        .patch(`/api/articles/6`)
+        .send({
+          inc_votes: 3,
+        })
+        .expect(201)
+        .then((response) => {
+          expect(response.body.article.votes).toEqual(4);
+        });
+    });
+    test("201: responds with the correctly decremented vote count when passed a negative integer", () => {
+      return request(app)
+        .patch(`/api/articles/6`)
+        .send({
+          inc_votes: -3,
+        })
+        .expect(201)
+        .then((response) => {
+          expect(response.body.article.votes).toEqual(-2);
+        });
+    });
+    test("404: responds with a 404 error and message if article does not exist", () => {
+      return request(app)
+        .patch("/api/articles/10000")
+        .send({
+          inc_votes: -3,
+        })
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Not found");
+        });
+    });
+    test("400: responds with a 400 error and message if non number value entered to inc_votes", () => {
+      return request(app)
+        .patch('/api/articles/6')
+        .send({
+          inc_votes: "null",
+        })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Invalid id");
+        });
+    });
+  });
 });
+//non number value to unc votes (400)
+//article id that doesnt exist (404)
