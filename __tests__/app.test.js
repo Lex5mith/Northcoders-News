@@ -100,6 +100,27 @@ describe("app.js tests", () => {
           });
         });
     });
+    test("200: responds with the correct article object on the response body", () => {
+      return request(app)
+        .get("/api/articles/13")
+        .expect(200)
+        .then((response) => {
+          const { article } = response.body;
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              body: expect.any(String),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(String),
+            })
+          );
+        });
+    });
     test("404: responds with error when given an unknown article id", () => {
       return request(app)
         .get("/api/articles/5000")
