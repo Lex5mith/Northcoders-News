@@ -38,7 +38,9 @@ describe("app.js tests", () => {
           ]);
           expect(
             response.body["GET /api/articles/:article_id"].description
-          ).toEqual("returns one article when given a valid id");
+          ).toEqual(
+            "returns one article including comment count when given a valid id"
+          );
           expect(
             response.body["GET /api/articles/:article_id/comments"].description
           ).toEqual("returns an array of comments when given a valid id");
@@ -84,18 +86,18 @@ describe("app.js tests", () => {
         .expect(200)
         .then((response) => {
           const { article } = response.body;
-          console.log(article, "articles in getarticlesbyid test")
           expect(article).toEqual({
-            author: 'butter_bridge',
-            title: 'Another article about Mitch',
+            author: "butter_bridge",
+            title: "Another article about Mitch",
             article_id: 13,
-            body: 'There will never be enough articles about Mitch!',
-            topic: 'mitch',
+            body: "There will never be enough articles about Mitch!",
+            topic: "mitch",
             created_at: "2020-10-11T11:24:00.000Z",
             votes: 0,
-            article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
-            comment_count: '0'
-            });
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            comment_count: "0",
+          });
         });
     });
     test("404: responds with error when given an unknown article id", () => {
@@ -159,12 +161,12 @@ describe("app.js tests", () => {
           expect(comments).toEqual([
             {
               comment_id: 16,
-              body: 'This is a bad article name',
+              body: "This is a bad article name",
               article_id: 6,
-              author: 'butter_bridge',
+              author: "butter_bridge",
               votes: 1,
-              created_at: '2020-10-11T15:23:00.000Z'
-            }
+              created_at: "2020-10-11T15:23:00.000Z",
+            },
           ]);
         });
     });
