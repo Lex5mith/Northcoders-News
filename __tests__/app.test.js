@@ -30,6 +30,12 @@ describe("app.js tests", () => {
           expect(response.body["GET /api/articles"].description).toEqual(
             "serves an array of all articles"
           );
+          expect(response.body["GET /api/articles"].queries).toEqual([
+            "author",
+            "topic",
+            "sort_by",
+            "order",
+          ]);
           expect(
             response.body["GET /api/articles/:article_id"].description
           ).toEqual("returns one article when given a valid id");
@@ -141,6 +147,7 @@ describe("app.js tests", () => {
         });
     });
   });
+
   describe("GET getAllCommentsByArticleId", () => {
     test("200: responds with an array of comments for the given article_id with the correct properties", () => {
       return request(app)
@@ -247,6 +254,7 @@ describe("app.js tests", () => {
         });
     });
   });
+
   describe("PATCH: /api/articles/:article_id", () => {
     test("201: reponds with the updated article", () => {
       return request(app)
@@ -312,6 +320,7 @@ describe("app.js tests", () => {
         });
     });
   });
+
   describe("DELETE: /api/comments/:comment_id", () => {
     test("204: deleted the comment and responds with status 204 and no content", () => {
       return request(app)
@@ -338,6 +347,7 @@ describe("app.js tests", () => {
         });
     });
   });
+
   describe("GET getAllUsers", () => {
     test("200: responds with an array of user objects", () => {
       return request(app)
@@ -359,7 +369,71 @@ describe("app.js tests", () => {
         .then((response) => {
           const { users } = response.body;
           expect(users).toHaveLength(4);
-          });
         });
     });
   });
+
+  describe("GET articles queries", () => {
+    test("200: articles can be queried by topic, all articles with that topic should be returned", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles).toHaveLength(12);
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
+        });
+    });
+    test("200: responds with empty article array if topic exists, but has no articles", () => {
+      return request(app)
+        .get("/api/articles?topic=paper")
+        .expect(200)
+        .then((response) => {
+          expect(response.body.articles).toEqual([]);
+        });
+    });
+    test("200: articles can be queried by topic, sorted by a specified field and ordered either ascending or descending", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=votes&order=ASC")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles).toHaveLength(12);
+          expect(articles).toBeSortedBy("votes");
+          expect(articles[0].votes).toEqual(0);
+          expect(articles[11].votes).toEqual(100);
+          expect(articles).toBeSortedBy("votes", { ascending: true });
+          articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
+        });
+    });
+    test("404: responds with a 404 error and message if topic does not exist", () => {
+      return request(app)
+        .get("/api/articles?topic=coconut")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Not found");
+        });
+    });
+    test("400: responds with a 400 error and message if sort_by given an invalid value", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=coconuts")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Sort column does not exist");
+        });
+    });
+
+    test("400: responds with a 400 error and message if order given an invalid value", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=votes&order=carrots")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toEqual(`Order must be ASC or DESC`);
+        });
+    });
+  });
+});
