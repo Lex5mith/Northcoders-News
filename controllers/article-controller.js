@@ -19,7 +19,6 @@ const getArticleById = (request, response, next) => {
   ]
 Promise.all(promises)
     .then((resolvedPromises) => {
-      console.log(resolvedPromises[0], resolvedPromises[1], "reolvedPromises[0] in article controller")
       const article = resolvedPromises[0]
         return response.status(200).send({ article });
       })

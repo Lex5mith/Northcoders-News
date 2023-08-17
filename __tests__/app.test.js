@@ -79,7 +79,7 @@ describe("app.js tests", () => {
     });
   });
 
-  describe.only("GET getArticlesById", () => {
+  describe("GET getArticlesById", () => {
     test("200: responds with the correct article object on the response body", () => {
       return request(app)
         .get("/api/articles/13")
