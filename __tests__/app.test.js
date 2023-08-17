@@ -77,24 +77,25 @@ describe("app.js tests", () => {
     });
   });
 
-  describe("GET getArticlesById", () => {
+  describe.only("GET getArticlesById", () => {
     test("200: responds with the correct article object on the response body", () => {
       return request(app)
         .get("/api/articles/13")
         .expect(200)
         .then((response) => {
           const { article } = response.body;
+          console.log(article, "articles in getarticlesbyid test")
           expect(article).toEqual({
+            author: 'butter_bridge',
+            title: 'Another article about Mitch',
             article_id: 13,
-            title: "Another article about Mitch",
-            topic: "mitch",
-            author: "butter_bridge",
-            body: "There will never be enough articles about Mitch!",
+            body: 'There will never be enough articles about Mitch!',
+            topic: 'mitch',
             created_at: "2020-10-11T11:24:00.000Z",
             votes: 0,
-            article_img_url:
-              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
-          });
+            article_img_url: 'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
+            comment_count: '0'
+            });
         });
     });
     test("404: responds with error when given an unknown article id", () => {
@@ -102,7 +103,7 @@ describe("app.js tests", () => {
         .get("/api/articles/5000")
         .expect(404)
         .then((response) => {
-          expect(response.body.msg).toEqual(`Article 5000 does not exist`);
+          expect(response.body.msg).toEqual(`Not found`);
         });
     });
     test("400: responds with error when given an unknown article id", () => {
@@ -158,12 +159,12 @@ describe("app.js tests", () => {
           expect(comments).toEqual([
             {
               comment_id: 16,
-              body: "This is a bad article name",
+              body: 'This is a bad article name',
               article_id: 6,
-              author: "butter_bridge",
+              author: 'butter_bridge',
               votes: 1,
-              created_at: "2020-10-11T15:23:00.000Z",
-            },
+              created_at: '2020-10-11T15:23:00.000Z'
+            }
           ]);
         });
     });

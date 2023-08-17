@@ -38,7 +38,7 @@ app.use((request, response) => {
 
 app.use((error, request, response, next) => {
   // handle caught psql errors
-  // console.log("app.js err", error);
+  console.log("app.js err", error);
   if (error.code === "23502" || error.code === "22P02") {
     return response.status(400).send({ msg: "Invalid id" });
   }
