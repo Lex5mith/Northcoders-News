@@ -24,10 +24,7 @@ exports.allArticlesWithCommentCount = (
   sort_by = "created_at",
   order = "DESC"
 ) => {
-  console.log({ topic, sort_by, order }, "model args");
   const queryValues = [];
-
-  // do i need an initial query, to check if the topic is valid/exists
 
   let queryCommentCountSql = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
   COUNT(comments.article_id) AS comment_count 
@@ -89,6 +86,20 @@ exports.checkCommentExists = (comment_id) => {
     });
 };
 
+exports.checkTopicExists = (topic) => {
+  return db
+    .query(
+      `SELECT * FROM topics
+    WHERE slug = $1`,
+      [topic]
+    )
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({ status: 404, msg: "Not found" });
+      }
+    });
+};
+
 exports.addArticleComment = (article_id, requestBody) => {
   return db
     .query(
@@ -127,7 +138,6 @@ exports.removeComment = (comment_id) => {
       [comment_id]
     )
     .then(({ rows }) => {
-      console.log("rows after delete sql query", rows);
       return rows;
     });
 };

@@ -8,6 +8,7 @@ const {
   updateArticleById,
   removeComment,
   checkCommentExists,
+  checkTopicExists,
 } = require("../models/article-model");
 
 const getArticleById = (request, response, next) => {
@@ -26,8 +27,15 @@ const getArticleById = (request, response, next) => {
 
 const getAllArticles = (request, response, next) => {
   const { topic, sort_by, order } = request.query;
-  allArticlesWithCommentCount(topic, sort_by, order)
-    .then((articles) => {
+  const promises = [allArticlesWithCommentCount(topic, sort_by, order)];
+
+  if (topic) {
+    promises.push(checkTopicExists(topic));
+  }
+
+  Promise.all(promises)
+    .then((resolvedPromises) => {
+      const articles = resolvedPromises[0];
       return response.status(200).send({ articles });
     })
     .catch((error) => {
