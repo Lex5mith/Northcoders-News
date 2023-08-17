@@ -45,12 +45,6 @@ app.use((error, request, response, next) => {
   if (error.code === "23503") {
     return response.status(404).send({ msg: "Id is not in table" });
   }
-  if (error.code === "42703") {
-    return response.status(400).send({ msg: `Sort column does not exist` });
-  }
-  if (error.code === "42601") {
-    return response.status(400).send({ msg: `Order must be ASC or DESC` });
-  }
   // handle Promise.reject with custom err code / err msg
   if (error.status && error.msg) {
     return response.status(error.status).send({ msg: error.msg });

@@ -24,6 +24,21 @@ exports.allArticlesWithCommentCount = (
   sort_by = "created_at",
   order = "DESC"
 ) => {
+  const columnHeadings = [
+    "author",
+    "title",
+    "article_id",
+    "topic",
+    "created_at",
+    "votes",
+  ];
+  //reject promises here to gaurd against SQL injection
+  if (order !== "DESC" && order !== "ASC") {
+    return Promise.reject({ status: 400, msg: "Order must be ASC or DESC" });
+  }
+  if (!columnHeadings.includes(sort_by)) {
+    return Promise.reject({ status: 400, msg: `Sort column does not exist` });
+  }
   const queryValues = [];
 
   let queryCommentCountSql = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
