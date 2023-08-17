@@ -147,6 +147,7 @@ describe("app.js tests", () => {
         });
     });
   });
+
   describe("GET getAllCommentsByArticleId", () => {
     test("200: responds with an array of comments for the given article_id with the correct properties", () => {
       return request(app)
@@ -253,6 +254,7 @@ describe("app.js tests", () => {
         });
     });
   });
+
   describe("PATCH: /api/articles/:article_id", () => {
     test("201: reponds with the updated article", () => {
       return request(app)
@@ -318,6 +320,7 @@ describe("app.js tests", () => {
         });
     });
   });
+
   describe("DELETE: /api/comments/:comment_id", () => {
     test("204: deleted the comment and responds with status 204 and no content", () => {
       return request(app)
@@ -344,6 +347,7 @@ describe("app.js tests", () => {
         });
     });
   });
+
   describe("GET getAllUsers", () => {
     test("200: responds with an array of user objects", () => {
       return request(app)
@@ -368,6 +372,7 @@ describe("app.js tests", () => {
         });
     });
   });
+
   describe("GET articles queries", () => {
     test("200: articles can be queried by topic, all articles with that topic should be returned", () => {
       return request(app)
