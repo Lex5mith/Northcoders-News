@@ -27,7 +27,7 @@
     }
   },
   "GET /api/articles/:article_id": {
-    "description": "returns one article when given a valid id",
+    "description": "returns one article including comment count when given a valid id",
     "exampleResponse": {
       "article": {
         "title": "Seafood substitutions are increasing",

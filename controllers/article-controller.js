@@ -13,17 +13,19 @@ const {
 
 const getArticleById = (request, response, next) => {
   const { article_id } = request.params;
-
-  fetchArticleById(article_id)
-    .then((article) => {
-      if (article) {
+  const promises = [
+    fetchArticleById(article_id),
+    checkArticleExists(article_id)
+  ]
+Promise.all(promises)
+    .then((resolvedPromises) => {
+      const article = resolvedPromises[0]
         return response.status(200).send({ article });
-      }
-    })
+      })
     .catch((error) => {
       next(error);
     });
-};
+  }
 
 const getAllArticles = (request, response, next) => {
   const { topic, sort_by, order } = request.query;

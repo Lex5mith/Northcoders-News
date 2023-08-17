@@ -38,7 +38,9 @@ describe("app.js tests", () => {
           ]);
           expect(
             response.body["GET /api/articles/:article_id"].description
-          ).toEqual("returns one article when given a valid id");
+          ).toEqual(
+            "returns one article including comment count when given a valid id"
+          );
           expect(
             response.body["GET /api/articles/:article_id/comments"].description
           ).toEqual("returns an array of comments when given a valid id");
@@ -85,16 +87,38 @@ describe("app.js tests", () => {
         .then((response) => {
           const { article } = response.body;
           expect(article).toEqual({
-            article_id: 13,
-            title: "Another article about Mitch",
-            topic: "mitch",
             author: "butter_bridge",
+            title: "Another article about Mitch",
+            article_id: 13,
             body: "There will never be enough articles about Mitch!",
+            topic: "mitch",
             created_at: "2020-10-11T11:24:00.000Z",
             votes: 0,
             article_img_url:
               "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            comment_count: "0",
           });
+        });
+    });
+    test("200: responds with the correct article object on the response body", () => {
+      return request(app)
+        .get("/api/articles/13")
+        .expect(200)
+        .then((response) => {
+          const { article } = response.body;
+          expect(article).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              body: expect.any(String),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(String),
+            })
+          );
         });
     });
     test("404: responds with error when given an unknown article id", () => {
@@ -102,7 +126,7 @@ describe("app.js tests", () => {
         .get("/api/articles/5000")
         .expect(404)
         .then((response) => {
-          expect(response.body.msg).toEqual(`Article 5000 does not exist`);
+          expect(response.body.msg).toEqual(`Not found`);
         });
     });
     test("400: responds with error when given an unknown article id", () => {

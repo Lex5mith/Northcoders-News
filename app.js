@@ -38,12 +38,14 @@ app.use((request, response) => {
 
 app.use((error, request, response, next) => {
   // handle caught psql errors
-  // console.log("app.js err", error);
   if (error.code === "23502" || error.code === "22P02") {
     return response.status(400).send({ msg: "Invalid id" });
   }
   if (error.code === "23503") {
     return response.status(404).send({ msg: "Id is not in table" });
+  }
+  if (error.code === "42703") {
+    return response.status(400).send({ msg: `Sort column does not exist` });
   }
   // handle Promise.reject with custom err code / err msg
   if (error.status && error.msg) {
