@@ -25,7 +25,7 @@ const getArticleById = (request, response, next) => {
 };
 
 const getAllArticles = (request, response, next) => {
-  const {topic, sort_by, order} = request.query
+  const { topic, sort_by, order } = request.query;
   allArticlesWithCommentCount(topic, sort_by, order)
     .then((articles) => {
       return response.status(200).send({ articles });
@@ -82,22 +82,17 @@ const patchArticleById = (request, response, next) => {
 };
 
 const deleteCommentByCommentId = (request, response, next) => {
-  const {comment_id} = request.params
-  const promises = [
-    checkCommentExists(comment_id),
-    removeComment(comment_id)
-  ]
+  const { comment_id } = request.params;
+  const promises = [checkCommentExists(comment_id), removeComment(comment_id)];
 
   Promise.all(promises)
-  .then((resolvedPromises) => {
-    return response.status(204).send()
-  })
-  .catch((error) => {
-    next(error);
-  });
-}
-
-
+    .then((resolvedPromises) => {
+      return response.status(204).send();
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
 
 module.exports = {
   getArticleById,
@@ -105,5 +100,5 @@ module.exports = {
   getAllCommentsByArticleId,
   postCommentToArticle,
   patchArticleById,
-  deleteCommentByCommentId, 
+  deleteCommentByCommentId,
 };

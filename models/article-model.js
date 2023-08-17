@@ -24,43 +24,26 @@ exports.allArticlesWithCommentCount = (
   sort_by = "created_at",
   order = "DESC"
 ) => {
-  const allArticles = [
-    "title",
-    "topic",
-    "author",
-    "body",
-    "created_at",
-    "votes",
-    "article_image_url, comment_count",
-  ];
+  console.log({ topic, sort_by, order }, "model args");
   const queryValues = [];
+
+  // do i need an initial query, to check if the topic is valid/exists
 
   let queryCommentCountSql = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
   COUNT(comments.article_id) AS comment_count 
   FROM articles
   LEFT JOIN comments 
-  ON articles.article_id = comments.article_id 
-  GROUP BY articles.article_id
-  ORDER BY ${sort_by} ${order};
-  `;
-
-  if (!allArticles.includes(topic)) {
-    return db.query(queryCommentCountSql).then(({ rows }) => {
-      return rows;
-    });
-  }
+  ON articles.article_id = comments.article_id`;
 
   if (topic) {
-    queryCommentCountSql += `WHERE topic = $1`;
+    queryCommentCountSql += ` WHERE topic = $1`;
     queryValues.push(topic);
   }
 
-  // if (sort_by) {
-  //   queryCommentCountSql += `WHERE topic = $1`;
-  //   queryValues.push(sort_by);
-  // }
-
-  // queryCommentCountSql += `ORDER BY ${order}`;
+  if (sort_by && order) {
+    queryCommentCountSql += ` GROUP BY articles.article_id
+    ORDER BY ${sort_by} ${order}`;
+  }
 
   return db.query(queryCommentCountSql, queryValues).then(({ rows }) => {
     return rows;

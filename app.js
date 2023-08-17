@@ -7,9 +7,9 @@ const {
   getAllArticles,
   getAllCommentsByArticleId,
   postCommentToArticle,
-  deleteCommentByCommentId, 
+  deleteCommentByCommentId,
 } = require("./controllers/article-controller");
-const {getAllUsers} = require("./controllers/user-controller")
+const { getAllUsers } = require("./controllers/user-controller");
 
 const app = express();
 app.use(express.json());
@@ -28,12 +28,9 @@ app.get("/api/articles/:article_id/comments", getAllCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", postCommentToArticle);
 
-app.delete("/api/comments/:comment_id", deleteCommentByCommentId )
+app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
 
 app.get("/api/users", getAllUsers);
-
-
-
 
 app.use((request, response) => {
   response.status(404).send({ msg: "Not found" });
@@ -41,14 +38,12 @@ app.use((request, response) => {
 
 app.use((error, request, response, next) => {
   // handle caught psql errors
+  console.log("app.js err", error);
   if (error.code === "23502" || error.code === "22P02") {
-    return response
-      .status(400)
-      .send({ msg: "Invalid id" });
+    return response.status(400).send({ msg: "Invalid id" });
   }
-  if(error.code === "23503"){
-    return response.status(404)
-    .send({msg: "Id is not in table" })
+  if (error.code === "23503") {
+    return response.status(404).send({ msg: "Id is not in table" });
   }
   // handle Promise.reject with custom err code / err msg
   if (error.status && error.msg) {

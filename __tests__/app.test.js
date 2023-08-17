@@ -362,16 +362,33 @@ describe("app.js tests", () => {
         });
     });
   });
-  describe("articles queries", () => {
-    test("200: articles can be queried by topic, if no topic is specified, all articles should be", () => {
+  describe("GET articles queries", () => {
+    test.only("200: articles can be queried by topic, all articles with that topic should be returned", () => {
       return request(app)
-        .get("api/articles?topic=mitch")
+        .get("/api/articles?topic=mitch")
+        .expect(200)
         .then(({ body }) => {
-          const { articles } = body.expect(articles).toHaveLength(12);
+          const { articles } = body;
+          expect(articles).toHaveLength(12);
           articles.forEach((article) => {
             expect(article.topic).toBe("mitch");
           });
         });
     });
+    test.only("200: articles can be queried by topic, all articles with that topic should be returned", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch&sort_by=author&order=ASC")
+        .expect(200)
+        .then(({ body }) => {
+          const { articles } = body;
+          expect(articles).toHaveLength(12);
+          // articles.forEach((article) => {
+          //   expect(article.topic).toBe("mitch");
+          // });
+        });
+    });
   });
 });
+//error if given an unknown topic
+//error if given an invalid topic
+//
