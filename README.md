@@ -6,6 +6,8 @@ Welcome to my RESTful API for Northcoders News. This reddit-style news aggregati
 
 This repo is for the back-end code for this project. 
 
+**You can find a hosted version of this here: https://lexs-nc-news.onrender.com/api**
+
 <br>
 
 ## Installation
@@ -17,16 +19,21 @@ Before setting up the project make sure that you have the following installed:
 
 #### Node
 
+I have developed this using v18.16.1
+
 ```
 node-v
 ```
 
 This command will tell you the version of node that you are runing if you have it installed. If you do not, follow the setup instructions here: 
+
 **https://nodejs.org/en/download/package-manager**
 
 #### Npm 
 
-**Make sure you have npm installed**
+I have developed this using 9.5.1
+
+
 
 ```
 npm -v
@@ -38,7 +45,7 @@ This command will tell you the version of npm you have, if you have it installed
 npm install
 ```
 
-### PostgreSQL
+#### PostgreSQL
 
 I have developed this using PostgreSQL V15.4
 
@@ -121,16 +128,26 @@ The endpoints availbale for this API are:
 | /api/users                          	| GET              	| Serves an array of all users                                              	|                                                                 	|
 
 
-#### For a comprehensive list of enpoints and their variables please see "api/"
+#### For a comprehensive list of enpoints and their variables please see the "api/" route
 
 <br>
 
 ## Running Tests
 
-1. To run tests, open a terminal, navigate to the project folder and run
+To run tests, open a terminal, navigate to the project folder and run
 
 ```
 npm test
+```
+
+## Scripts
+
+
+To connect to the local server:
+The local server port for this project has been set to 9090.
+
+```
+npm start
 ```
 
 
