@@ -164,7 +164,6 @@ exports.createArticle = (author, title, body, topic, article_img_url) => {
       [author, title, body, topic, article_img_url]
     )
     .then(({ rows }) => {
-      console.log(rows, "<<<rows in model");
       return rows[0];
     });
 };

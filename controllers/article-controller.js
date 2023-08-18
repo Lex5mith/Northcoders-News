@@ -106,13 +106,12 @@ const deleteCommentByCommentId = (request, response, next) => {
 };
 
 const postArticle = (request, response, next) => {
-  console.log(request.body, "req body in controller");
   const { author, title, body, topic, article_img_url = "" } = request.body;
 
-  console.log("request.body controller: ", request.body);
   createArticle(author, title, body, topic, article_img_url)
-    .then((newArticle) => {
-      return response.status(201).send({ newArticle });
+    .then(async (newArticle) => {
+      const completeArticle = await fetchArticleById(newArticle.article_id);
+      return response.status(201).send({ newArticle: completeArticle });
     })
     .catch((error) => {
       next(error);

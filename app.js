@@ -36,12 +36,10 @@ app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
 app.get("/api/users", getAllUsers);
 
 app.use((request, response) => {
-  // console.log(response, "<<<response in app");
   response.status(404).send({ msg: "Not found" });
 });
 
 app.use((error, request, response, next) => {
-  console.log(error, "<<<psql error in app");
   // handle caught psql errors
   if (error.code === "23502" || error.code === "22P02") {
     return response.status(400).send({ msg: "Invalid id" });
