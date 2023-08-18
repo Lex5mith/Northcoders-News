@@ -460,4 +460,36 @@ describe("app.js tests", () => {
         });
     });
   });
+  describe.only("POST postArticle", () => {
+    test("201: responds with the article data that has beed added", () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "lurker",
+          title: "to be, or not to be, that is the question",
+          body: "this is my first post...be kind to me!",
+          topic: "paper",
+          article_img_url: " ",
+          votes: 0,
+        })
+        .expect(201)
+        .then((response) => {
+          console.log(response.body, "<<<response in test");
+          const { newArticle } = response.body;
+          expect(newArticle).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              body: expect.any(String),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              // comment_count: expect.any(String),
+            })
+          );
+        });
+    });
+  });
 });
