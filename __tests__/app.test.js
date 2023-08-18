@@ -55,6 +55,9 @@ describe("app.js tests", () => {
           expect(
             response.body["DELETE /api/comments/:comment_id"].description
           ).toEqual("deletes the given comment by comment_id");
+          expect(
+            response.body["POST /api/articles"].description
+          ).toEqual("returns the article that has been added");
         });
     });
   });
@@ -457,6 +460,70 @@ describe("app.js tests", () => {
         .expect(400)
         .then((response) => {
           expect(response.body.msg).toEqual(`Order must be ASC or DESC`);
+        });
+    });
+  });
+
+  describe("POST postArticle", () => {
+    test("201: responds with the article data that has beed added", () => {
+      return request(app)
+        .post("/api/articles")
+        .send({
+          author: "lurker",
+          title: "to be, or not to be, that is the question",
+          body: "this is my first post...be kind to me!",
+          topic: "paper",
+          article_img_url: " ",
+          votes: 0,
+        })
+        .expect(201)
+        .then((response) => {
+          const { newArticle } = response.body;
+          expect(newArticle).toEqual(
+            expect.objectContaining({
+              author: expect.any(String),
+              title: expect.any(String),
+              article_id: expect.any(Number),
+              body: expect.any(String),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(String),
+            })
+          );
+        });
+    });
+    test("404: responds with a 400 error and message if username does not exist", () => {
+      return request(app)
+        .post("/api/articles/")
+        .send({
+          author: "bob",
+          title: "to be, or not to be, that is the question",
+          body: "this is my first post...be kind to me!",
+          topic: "paper",
+          article_img_url: " ",
+          votes: 0,
+        })
+        .expect(404)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Id is not in table");
+        });
+    });
+    test("400: responds with a 400 error and message if bad request body sent", () => {
+      return request(app)
+        .post("/api/articles/")
+        .send({
+          author: null,
+          title: "to be, or not to be, that is the question",
+          body: "this is my first post...be kind to me!",
+          topic: "paper",
+          article_img_url: " ",
+          votes: 0,
+        })
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toEqual("Invalid id");
         });
     });
   });

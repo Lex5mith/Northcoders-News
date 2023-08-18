@@ -8,6 +8,7 @@ const {
   getAllCommentsByArticleId,
   postCommentToArticle,
   deleteCommentByCommentId,
+  postArticle,
 } = require("./controllers/article-controller");
 const { getAllUsers } = require("./controllers/user-controller");
 
@@ -19,6 +20,8 @@ app.get("/api", getApiDocumentation);
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles", getAllArticles);
+
+app.post("/api/articles", postArticle);
 
 app.get("/api/articles/:article_id", getArticleById);
 

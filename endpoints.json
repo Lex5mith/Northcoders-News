@@ -26,6 +26,28 @@
       ]
     }
   },
+  "POST /api/articles": {
+    "description": "returns the article that has been added",
+    "exampleBody": {
+          "author": "lurker",
+          "title": "to be, or not to be, that is the question",
+          "body": "this is my first post...be kind to me!",
+          "topic": "paper",
+          "article_img_url": " ",
+          "votes": 0
+    },
+    "exampleResponse": {
+      "author": "lurker",
+      "title": "to be, or not to be, that is the question",
+      "article_id": 14,
+      "body": "this is my first post...be kind to me!",
+      "topic": "paper",
+      "created_at": "2023-08-18T13:43:29.312Z",
+      "votes": 0,
+      "article_img_url": " ",
+      "comment_count": "0"
+    }
+  },
   "GET /api/articles/:article_id": {
     "description": "returns one article including comment count when given a valid id",
     "exampleResponse": {

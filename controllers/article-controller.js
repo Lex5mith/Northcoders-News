@@ -9,23 +9,24 @@ const {
   removeComment,
   checkCommentExists,
   checkTopicExists,
+  createArticle,
 } = require("../models/article-model");
 
 const getArticleById = (request, response, next) => {
   const { article_id } = request.params;
   const promises = [
     fetchArticleById(article_id),
-    checkArticleExists(article_id)
-  ]
-Promise.all(promises)
+    checkArticleExists(article_id),
+  ];
+  Promise.all(promises)
     .then((resolvedPromises) => {
-      const article = resolvedPromises[0]
-        return response.status(200).send({ article });
-      })
+      const article = resolvedPromises[0];
+      return response.status(200).send({ article });
+    })
     .catch((error) => {
       next(error);
     });
-  }
+};
 
 const getAllArticles = (request, response, next) => {
   const { topic, sort_by, order } = request.query;
@@ -104,6 +105,19 @@ const deleteCommentByCommentId = (request, response, next) => {
     });
 };
 
+const postArticle = (request, response, next) => {
+  const { author, title, body, topic, article_img_url = "" } = request.body;
+
+  createArticle(author, title, body, topic, article_img_url)
+    .then(async (newArticle) => {
+      const completeArticle = await fetchArticleById(newArticle.article_id);
+      return response.status(201).send({ newArticle: completeArticle });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
 module.exports = {
   getArticleById,
   getAllArticles,
@@ -111,4 +125,5 @@ module.exports = {
   postCommentToArticle,
   patchArticleById,
   deleteCommentByCommentId,
+  postArticle,
 };

@@ -7,14 +7,12 @@ exports.fetchArticleById = (article_id) => {
     LEFT JOIN comments 
     ON articles.article_id = comments.article_id
     WHERE articles.article_id = $1
-    GROUP BY articles.article_id, comments.comment_id` 
+    GROUP BY articles.article_id, comments.comment_id`;
 
   return db.query(baseArticleSql, [article_id]).then((result) => {
     const article = result.rows;
     return article[0];
-
   });
-
 };
 
 exports.allArticlesWithCommentCount = (
@@ -152,5 +150,20 @@ exports.removeComment = (comment_id) => {
     )
     .then(({ rows }) => {
       return rows;
+    });
+};
+
+exports.createArticle = (author, title, body, topic, article_img_url) => {
+  return db
+    .query(
+      `INSERT INTO articles
+    (author, title, body, topic, article_img_url )
+    VALUES
+    ($1, $2, $3, $4, $5)
+    RETURNING *;`,
+      [author, title, body, topic, article_img_url]
+    )
+    .then(({ rows }) => {
+      return rows[0];
     });
 };
