@@ -1,5 +1,5 @@
 const { request, response } = require("express");
-const {allUserData} = require("../models/users-model");
+const {allUserData, returnUser} = require("../models/users-model");
 
 
 const getAllUsers = (request, response, next) => {
@@ -12,6 +12,17 @@ const getAllUsers = (request, response, next) => {
   })
 }
 
+// const getUserByUsername = (request, response, next) => {
+//   returnUser()
+//   .then((user) => {
+//     return response.status(200).send({user})
+//   })
+//   .catch((error) => {
+//     next(error)
+//   })
+// }
+
 module.exports = {
-    getAllUsers,
+    getAllUsers, 
+    //getUserByUsername,
 }

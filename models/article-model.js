@@ -167,3 +167,4 @@ exports.createArticle = (author, title, body, topic, article_img_url) => {
       return rows[0];
     });
 };
+

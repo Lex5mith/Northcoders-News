@@ -106,8 +106,7 @@ const deleteCommentByCommentId = (request, response, next) => {
 };
 
 const postArticle = (request, response, next) => {
-  const { author, title, body, topic, article_img_url = "" } = request.body;
-
+  const { author, title, body, topic, article_img_url = "https://commons.wikimedia.org/wiki/File:No-Image-Placeholder.svg" } = request.body;
   createArticle(author, title, body, topic, article_img_url)
     .then(async (newArticle) => {
       const completeArticle = await fetchArticleById(newArticle.article_id);

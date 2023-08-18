@@ -7,3 +7,12 @@ exports.allUserData = () => {
         return rows
     })
 }
+
+// exports.returnUser = (username) => {
+//     let querySingleUser = `SELECT * 
+//     FROM users
+//     WHERE users.username = $1`
+//         return db.query(querySingleUser).then(({rows})=> {
+//             return rows
+//         });
+//       }

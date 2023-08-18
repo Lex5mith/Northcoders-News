@@ -10,7 +10,7 @@ const {
   deleteCommentByCommentId,
   postArticle,
 } = require("./controllers/article-controller");
-const { getAllUsers } = require("./controllers/user-controller");
+const { getAllUsers, } = require("./controllers/user-controller");
 
 const app = express();
 app.use(express.json());
@@ -34,6 +34,8 @@ app.post("/api/articles/:article_id/comments", postCommentToArticle);
 app.delete("/api/comments/:comment_id", deleteCommentByCommentId);
 
 app.get("/api/users", getAllUsers);
+
+// app.get("/api/users/:username", getUserByUsername )
 
 app.use((request, response) => {
   response.status(404).send({ msg: "Not found" });
