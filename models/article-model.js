@@ -20,14 +20,8 @@ exports.allArticlesWithCommentCount = (
   sort_by = "created_at",
   order = "DESC"
 ) => {
-  const columnHeadings = [
-    "author",
-    "title",
-    "article_id",
-    "topic",
-    "created_at",
-    "votes",
-  ];
+  const columnHeadings = ["created_at", "comment_count", "votes"];
+
   //reject promises here to gaurd against SQL injection
   if (order !== "DESC" && order !== "ASC") {
     return Promise.reject({ status: 400, msg: "Order must be ASC or DESC" });
