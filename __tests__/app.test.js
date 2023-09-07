@@ -55,9 +55,9 @@ describe("app.js tests", () => {
           expect(
             response.body["DELETE /api/comments/:comment_id"].description
           ).toEqual("deletes the given comment by comment_id");
-          expect(
-            response.body["POST /api/articles"].description
-          ).toEqual("returns the article that has been added");
+          expect(response.body["POST /api/articles"].description).toEqual(
+            "returns the article that has been added"
+          );
         });
     });
   });
@@ -293,12 +293,15 @@ describe("app.js tests", () => {
         .then((response) => {
           const { article } = response.body;
           expect(article).toEqual({
-            comment_id: 16,
-            body: "This is a bad article name",
+            article_img_url:
+              "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+            body: "Delicious tin of cat food",
             article_id: 6,
-            author: "butter_bridge",
-            votes: 4,
-            created_at: "2020-10-11T15:23:00.000Z",
+            author: "icellusedkars",
+            created_at: "2020-10-18T01:00:00.000Z",
+            title: "A",
+            topic: "mitch",
+            votes: 3,
           });
         });
     });
@@ -310,7 +313,7 @@ describe("app.js tests", () => {
         })
         .expect(201)
         .then((response) => {
-          expect(response.body.article.votes).toEqual(4);
+          expect(response.body.article.votes).toEqual(3);
         });
     });
     test("201: responds with the correctly decremented vote count when passed a negative integer", () => {
@@ -321,7 +324,7 @@ describe("app.js tests", () => {
         })
         .expect(201)
         .then((response) => {
-          expect(response.body.article.votes).toEqual(-2);
+          expect(response.body.article.votes).toEqual(-3);
         });
     });
     test("404: responds with a 404 error and message if article does not exist", () => {
